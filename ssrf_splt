@@ -1,0 +1,27 @@
+#!/bin/bash
+
+function split_ssrf(){
+
+	line=$(cat $1|wc -l)
+	let "val = $line / 4"
+
+	mkdir -p ssrf_$1 
+	
+	filename=$1
+	shift
+
+	cd ssrf_$1 && cp ../$1  ./
+        split -l $val  $1  "$1_"
+
+	for i in $@ ;do
+		echo "ssrf $filename_aa $1"
+	        ssrf "$filename_aa" $1  &> /dev/null
+		shift 
+	done
+
+
+}
+
+
+split_ssrf $@ 
+
