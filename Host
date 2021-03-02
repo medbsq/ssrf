@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+
+
+export COLAB_HOST=$2
+
+function test(){
+	        host="$(echo $1 |sha256sum |awk '{print $1}').$COLAB_HOST"
+        	echo "$1   $host"  >> hash_host
+	        echo $1 |httpx -H "Host: $host"
+}
+
+export -f test
+
+cat $1| xargs -n 1 -P 20  -I {} bash -c 'test "$@"' _ {}
