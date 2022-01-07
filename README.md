@@ -16,16 +16,13 @@ server side request forgery (ssrf)  fuzzer,this script will automate the scan fo
 
 ## Usage: 
 ssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> \
-ssrf_header -u <url> -c  <colaborato> -t <threads_number> --cookie <cookies>\
 
 
 ## Options:
   ```
   -h, --help   show this help message and exit
   -f URL_FILE  spicify the urls file
-  -u URL       spicify the  url
   -c COLAB     burp suite colaborator
   -t THREADS   set nubmer of threads
   -o OUTPUT    set output file
-  --cookie     set the cookies
 ```

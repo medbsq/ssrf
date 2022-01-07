@@ -7,11 +7,6 @@ import hashlib
 import threading
 import optparse
 
-# ssrf in Host header
-# ssrf in multiple headers
-# ssrf parameter  one b one
-# ssrf with known parameter
-
 
 def req(URL,colab,cookies,hash,queue):
     host = hash + "." + colab
@@ -121,12 +116,6 @@ def pool(filename,threads,colab,cookies):
                  out.write(hash +"     "+ url + '\n')
     stop_event.set()
 
-def cookie_it(cook):
-    cookies = dict()
-    for i in cook.split(";"):
-        cookies[i.split("=")[0]] = i.split("=")[1]
-    return cookies
-
 
 
 
@@ -147,28 +136,22 @@ def logo():
 
 def Main():
     parser = optparse.OptionParser(" help: \n" +\
-                                   "\tssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> \n"+\
-                                   "\tssrf_header -u <url> -c  <colaborato> -t <threads_number> --cookie <cookies>")
-    parser.add_option("-u",dest="url",type="string",help="spicify  url")
+                                   "\tssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> \n")
     parser.add_option("-f",dest="filename",type="string",help="spicify file of urls")
     parser.add_option("-t",dest="threads",type="int",help="spicify nybmer of threads")
     parser.add_option("-c",dest="colab",type="string",help="spicify collaborator")
-    parser.add_option("--cookie",dest="cookie",type="string",help="spicify cookies")
 
     (options ,args) = parser.parse_args()
 
     threads = 10
     cookies = None
-    if (options.filename != None and options.colab != None) or (options.url != None and options.colab != None):
+    if (options.filename != None and options.colab != None) :
         colab = options.colab
         if (options.filename != None):
             filename = options.filename
-        if (options.url != None):
-                url = options.url
         if (options.threads != None):
             threads = options.threads
-        if (options.cookie != None):
-            cookies = cookie_it(options.cookie)
+
     else:
         print(parser.usage)
         exit(1)
