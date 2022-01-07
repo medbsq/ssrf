@@ -1,5 +1,8 @@
-# methby
-http methods fuzzer
+
+
+
+# ssrffuzz
+
 
                            __  __  byMedbsq              
              ___ ___ _ __ / _|/ _|_   _ ________
@@ -8,18 +11,21 @@ http methods fuzzer
             |___/___/_|  |_| |_|  \__,_/___/___|
              https://github.com/medbsq/ssrf.git
             
+server side request forgery (ssrf)  fuzzer,this script will automate the scan for ssrf vulnerabilites   using a deferent techniques . by providing an  burp suite colaborator ,this script will generate a file that contain a unique hash for every scanned URL.
 
 
+## Usage: 
+ssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> \
+ssrf_header -u <url> -c  <colaborato> -t <threads_number> --cookie <cookies>\
 
-##Usage: 
-ssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> 
-ssrf_header -u <url> -c  <colaborato> -t <threads_number> --cookie <cookies>
 
-
-###Options:
-  -h, --help   show this help message and exit\
-  -f URL_FILE  spicify urls file\
-  -u URL       spicify url\
-  -c COLAB     burp suite colaborator\
-  -t THREADS   spicify nybmer of threads\
-  -o OUTPUT    spicify output file\
+## Options:
+  ```
+  -h, --help   show this help message and exit
+  -f URL_FILE  spicify the urls file
+  -u URL       spicify the  url
+  -c COLAB     burp suite colaborator
+  -t THREADS   set nubmer of threads
+  -o OUTPUT    set output file
+  --cookie     set the cookies
+```
