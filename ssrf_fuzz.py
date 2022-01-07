@@ -127,10 +127,28 @@ def cookie_it(cook):
         cookies[i.split("=")[0]] = i.split("=")[1]
     return cookies
 
+
+
+
+def logo():
+    print("""  \033[34m    
+                           __  __  byMedbsq              
+             ___ ___ _ __ / _|/ _|_   _ ________
+            / __/ __| '__| |_| |_| | | |_  /_  /
+            \__ \__ \ |  |  _|  _| |_| |/ / / / 
+            |___/___/_|  |_| |_|  \__,_/___/___|
+             https://github.com/medbsq/ssrf.git
+    
+    
+     \033[0m
+        """)
+
+
+
 def Main():
-    parser = optparse.OptionParser(" help: " +\
-                                   "ssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> --cookie <cookies>\n"+\
-                                   "ssrf_header -u <url> -c  <colaborato> -t <threads_number> --cookie <cookies>")
+    parser = optparse.OptionParser(" help: \n" +\
+                                   "\tssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> \n"+\
+                                   "\tssrf_header -u <url> -c  <colaborato> -t <threads_number> --cookie <cookies>")
     parser.add_option("-u",dest="url",type="string",help="spicify  url")
     parser.add_option("-f",dest="filename",type="string",help="spicify file of urls")
     parser.add_option("-t",dest="threads",type="int",help="spicify nybmer of threads")
@@ -160,5 +178,6 @@ def Main():
 
 
 if __name__ == '__main__':
+    logo()
     Main()
 
