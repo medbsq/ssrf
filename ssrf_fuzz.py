@@ -10,7 +10,7 @@ import optparse
 
 def req(URL,colab,cookies,hash,queue):
     host = hash + "." + colab
-    url = "https://" + host
+    url = "http://" + host
 
     host_header = {
                    'Proxy-Host': host,
