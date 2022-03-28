@@ -1,3 +1,4 @@
+import re
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 import requests
@@ -8,48 +9,54 @@ import threading
 import optparse
 
 
+
+
+def create_hash(url ,place,queue):
+    hs = str(hash(f"{url}+{place}")).replace("-","")
+    index = hs + "     " + url + "     " + place+'\n'
+    queue.put(index)
+    return hs
+
 def req(URL,colab,cookies,hash,queue):
     host = hash + "." + colab
-    url = "http://" + host
+    url = "https://" + host
 
     host_header = {
-                   'Proxy-Host': host,
-                   'Real-Ip': host,
-                   'Referer': host,
-                   'X-Forwarded-By': host,
-                   'X-Forwarded-For': host,
-                   'X-Forwarded-For-Original': host,
-                   'X-Forwarded': host,
-                   'X-Forwarded-Host': host,
-                   'X-Forwarded-Server': host,
-                   'X-Forwarder-For': host,
-                   'X-Forward-For': host,
-                   'X-Host': host,
-                   'X-Http-Host-Override': host,
-                   'X-Original-Remote-Addr': host,
-                   'X-Real-Ip': host,
-                   'X-Remote-Addr': host
+                   'Proxy-Host':  create_hash(URL,'Proxy-Host',queue) +"." + colab,
+                   'Real-Ip': create_hash(URL,'Proxy-Host',queue) +"." + colab,
+                   'Referer': create_hash(URL,'Referer',queue) +"." + colab,
+                   'X-Forwarded-By': create_hash(URL,'X-Forwarded-By',queue) +"." + colab,
+                   'X-Forwarded-For': create_hash(URL,'X-Forwarded-FOR',queue) +"." + colab,
+                   'X-Forwarded-For-Original':  create_hash(URL,'X-Forwarded-For-Original',queue) +"." + colab,
+                   'X-Forwarded': create_hash(URL,'X-Forwarded',queue) +"." + colab,
+                   'X-Forwarded-Host': create_hash(URL,'Proxy-Host',queue) +"." + colab,
+                   'X-Forwarded-Server': create_hash(URL,'X-Forwarded-Server',queue) +"." + colab,
+                   'X-Forwarder-For': create_hash(URL,'X-Forwarder-For',queue) +"." + colab,
+                   'X-Forward-For': create_hash(URL,'X-Forward-For',queue) +"." + colab,
+                   'X-Host': create_hash(URL,'X-Host',queue) +"." + colab,
+                   'X-Http-Host-Override': create_hash(URL,'X-Http-Host-Override',queue) +"." + colab,
+                   'X-Original-Remote-Addr': create_hash(URL,'X-Original-Remote-Addr',queue) +"." + colab,
+                   'X-Real-Ip': create_hash(URL,'X-Real-Ip',queue) +"." + colab,
+                   'X-Remote-Addr': create_hash(URL,'X-Remote-Addr',queue) +"." + colab,
                    }
 
-    url_header = {'Base-Url': url,
-                  'Http-Url': url,
-                  'Proxy-Url': url,
-                  'Redirect': url,
-                  'Referrer': url,
-                  'Request-Uri': url,
-                  'Uri': url,
-                  'Url': url,
-                  'X-Http-Destinationurl': url,
-                  'X-Original-Url': url,
-                  'X-Proxy-Url': url,
-                  'X-Rewrite-Url': url,
+    url_header = {'Base-Url': "https://"+create_hash(URL,'Base-Url',queue) +"." + colab,
+                  'Http-Url': "https://"+create_hash(URL,'Http-Url',queue) +"." + colab,
+                  'Proxy-Url': "https://"+create_hash(URL,'Proxy-Url',queue) +"." + colab,
+                  'Redirect': "https://"+create_hash(URL,'Redirect',queue) +"." + colab,
+                  'Referrer': "https://"+create_hash(URL,'Referrer',queue) +"." + colab,
+                  'Request-Uri': "https://"+create_hash(URL,'Request-Uri',queue) +"." + colab,
+                  'Uri': "https://"+create_hash(URL,'Uri',queue) +"." + colab,
+                  'Url': "https://"+create_hash(URL,'Url',queue) +"." + colab,
+                  'X-Http-Destinationurl': "https://"+create_hash(URL,'X-Http-Destinationurl',queue) +"." + colab,
+                  'X-Original-Url': "https://"+create_hash(URL,'X-Original-Url',queue) +"." + colab,
+                  'X-Proxy-Url': "https://"+create_hash(URL,'X-Proxy-Url',queue) +"." + colab,
+                  'X-Rewrite-Url': "https://"+create_hash(URL,'X-Rewrite-Url',queue) +"." + colab,
                   }
-
+    #
     requests.get(URL,headers=host_header,cookies=cookies)
     requests.get(URL,headers=url_header,cookies=cookies)
-
     requests.get(URL, headers={'Host': host}, cookies=cookies)
-
     parameter_all_in_one(URL,url,cookies=cookies)
     replace_param(URL,url,cookies)
     queue.put(URL)
@@ -74,7 +81,7 @@ def replace_param(URL,colab,cookies):
         for i in query:
             query[i] = query[i][0]
         q = urlencode(query, doseq=True)
-        a = "{}://{}?{}".format(parse[0], parse[1], q)
+        a = "{}://{}{}?{}".format(parse[0], parse[1],parse[2], q)
         requests.get(a,cookies=cookies)
 
 def parameter_all_in_one(URL,COLAB,cookies):
@@ -95,8 +102,15 @@ def done(queue,stop_event):
     GREEN = '\033[32m'
     RESET = '\033[0m'
     while not stop_event.is_set():
-        url= queue.get()
-        print("[ {}done{} ] {}".format(GREEN,RESET,url))
+        data = queue.get()
+
+        if  re.search(r"^[0-9]", data):
+            print(data)
+
+            with open("hash_file.txt","a") as f:
+                f.write(data)
+        else:
+            print("[ {}done{} ] {}".format(GREEN,RESET,data))
 
 
 
@@ -113,9 +127,7 @@ def pool(filename,threads,colab,cookies):
                  url= i.replace("\n", "")
                  hash = hashlib.sha224(url.encode('UTF-8')).hexdigest()
                  executor.submit(req,url,colab,cookies,hash,queue)
-                 out.write(hash +"     "+ url + '\n')
     stop_event.set()
-
 
 
 
@@ -155,7 +167,6 @@ def Main():
     else:
         print(parser.usage)
         exit(1)
-
     pool(filename,threads,colab,cookies)
 
 
