@@ -115,7 +115,7 @@ def done(queue,stop_event):
 
 
 def pool(filename,threads,colab,cookies):
-    print("urls_path=\033[33m{}\033[0m    colab=\033[33m{}\033[0m          threads=\033[33m{}\033[0m  cookies={} ".format(filename,threads,colab,cookies))
+    print("urls_path=\033[33m{}\033[0m    colab=\033[33m{}\033[0m          threads=\033[33m{}\033[0m  cookies={} ".format(filename,colab,threads,cookies))
     queue= Queue()
     stop_event =threading.Event()
     t=threading.Thread(target=done,args=(queue,stop_event),daemon=True)
