@@ -120,8 +120,8 @@ def done(queue, stop_event):
 
 def pool(filename,  colab,threads,  cookies):
     print(
-        "urls_path=\033[33m{}\033[0m    colab=\033[33m{}\033[0m          threads=\033[33m{}\033[0m  cookies={} ".format(
-            filename,  colab,threads, cookies))
+        "urls_path=\033[33m{}\033[0m    colab=\033[33m{}\033[0m          threads=\033[33m{}\033[0m ".format(
+            filename,  colab,threads))
     queue = Queue()
     stop_event = threading.Event()
     t = threading.Thread(target=done, args=(queue, stop_event), daemon=True)
@@ -171,7 +171,7 @@ def Main():
     else:
         print(parser.usage)
         exit(1)
-    pool(filename, threads, colab, cookies)
+    pool(filename,  colab,threads, cookies)
 
 
 if __name__ == '__main__':
