@@ -129,16 +129,13 @@ class ssrf:
             "open": f"http://{self.create_hash(URL, 'param_open')}"
         }
 
-        # p = list(zip(parameters.keys(),parameters.values()))
-        # for i in range(0,len(p),4):
-        #     params = {i[0]:i[1] for i in p[i:i+4]}
+
         param = urllib.parse.urlencode(parameters, doseq=True)
         u = "{}?{}".format(URL.split('?')[0], param)
         r = requests.get(u, timeout=5, allow_redirects=False, verify=False)
         self.queue.put(URL)
 
     def done(self, stop_event):
-        RED = '\033[31m'
         GREEN = '\033[32m'
         RESET = '\033[0m'
         while not stop_event.is_set():
