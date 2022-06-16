@@ -15,8 +15,9 @@ server side request forgery (ssrf)  fuzzer,this script will automate the scan fo
 
 
 ## Usage: 
-ssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number> \
-
+```
+ssrf_header -f <url_fielname> -c  <colaborato> -t <threads_number>
+```
 
 ## Options:
   ```
